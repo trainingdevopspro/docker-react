@@ -18,6 +18,7 @@ jobs:
       - run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Check username
       - run: echo "${{ secrets.DOCKER_PASSWORD }}" | wc -c # Verify password length
 
-      - run: docker build -t Charlie/docker-react cygnetops/react-test -f Dockerfile.dev .
+      #- run: docker build -t Charlie/docker-react cygnetops/react-test -f Dockerfile.dev .
+      - run: docker build -t Charlie/docker-react-test -f Dockerfile.dev .
       - run: docker run -e CI=true cygnetops/react-test npm test
 

@@ -8,18 +8,34 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Correct docker login step
       #- run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       #- run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       #- run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Debug
       #- run: echo "${{ secrets.DOCKER_PASSWORD:0:8 }}***" # Show first 8 chars, for debugging
-      - run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Check username
-      - run: echo "${{ secrets.DOCKER_PASSWORD }}" | wc -c # Verify password length
+      #- run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Check username
+      #- run: echo "${{ secrets.DOCKER_PASSWORD }}" | wc -c # Verify password length
 
       #- run: docker build -t Charlie/docker-react cygnetops/react-test -f Dockerfile.dev .
       - run: docker build -t Charlie/docker-react-test -f Dockerfile.dev .
       - run: docker run -e CI=true Charlie/docker-react-test npm test
       #- run: docker run -e CI=true cygnetops/react-test npm test
 
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      -name: Deploy to EB
+       uses: einaregilsson/beanstalk-deploy@v18
+       with:
+        AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+        AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          echo "AWS_ACCESS_KEY and AWS_SECRET_KEY have been set."
+        application_name: Frontend-gh
+        environment_name: Frontnend-env
+        existing_bucket_name: elasticbeanstalk-us-east-1-739921103494
+        region: us-east-1
+        version_label: ${{ github.sha }}
+        deployment_package: deploy.zip

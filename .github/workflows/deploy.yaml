@@ -9,19 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      # Correct docker login step
-      #- run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-      #- run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      #- run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Debug
-      #- run: echo "${{ secrets.DOCKER_PASSWORD:0:8 }}***" # Show first 8 chars, for debugging
-      #- run: echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" # Check username
-      #- run: echo "${{ secrets.DOCKER_PASSWORD }}" | wc -c # Verify password length
-
-      #- run: docker build -t Charlie/docker-react cygnetops/react-test -f Dockerfile.dev .
-      - run: docker build -t Charlie/docker-react-test -f Dockerfile.dev .
-      - run: docker run -e CI=true Charlie/docker-react-test npm test
-      #- run: docker run -e CI=true cygnetops/react-test npm test
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker build -t cygnetops/react-test -f Dockerfile.dev .
+      - run: docker run -e CI=true cygnetops/react-test npm test
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'

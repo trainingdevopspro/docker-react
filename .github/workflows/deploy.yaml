@@ -19,8 +19,8 @@ jobs:
       - name: Deploy to EB
         uses: trainingdevopspro/docker-react@main
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_kEY }}
           application_name: docker-gh
           environment_name: Docker-gh-env-1
           existing_bucket_name: elasticbeanstalk-us-east-1-739921103494

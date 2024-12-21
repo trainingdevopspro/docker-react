@@ -17,7 +17,7 @@ jobs:
         run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy to Elastic Beanstalk
-        uses: trainingdevopspro/docker-react@v1.0
+        uses: trainingdevopspro/docker-react@v1.0.0
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
